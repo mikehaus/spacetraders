@@ -1,6 +1,28 @@
+"use client";
 import Image from "next/image";
+import { useQuery } from "react-query";
+import axios from "axios";
+import { env } from "../src/env.mjs";
 
 export default function Home() {
+  // TODO: REFACTOR TO HANDLE CALL IN SERVER COMPONENT
+  const AXIOS_FACTION_CONFIG = {
+    method: "get",
+    url: "https://api.spacetraders.io/v2/my/factions",
+    headers: { Authorization: `Bearer ${env.NEXT_PUBLIC_SPACETRADERS_KEY}` },
+  };
+
+  const getFactions = () => {
+    axios(AXIOS_FACTION_CONFIG)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const factionData = useQuery({ queryKey: ["dnd"], queryFn: getFactions });
+  console.log(factionData);
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
